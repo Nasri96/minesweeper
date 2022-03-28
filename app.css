@@ -1,0 +1,13 @@
+.square {
+    width: 40px;
+    height: 40px;
+    background-image: url("./assets/MINESWEEPER_X.png");
+    background-size: cover;
+    display: inline-block;
+    cursor: pointer;
+}
+
+#clock {
+    width: 40px;
+    height: 40px;
+}
