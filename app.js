@@ -17,18 +17,18 @@ class Game {
                 columns: 10
             },
             medium: {
-                mines: 23,
+                mines: 20,
                 fieldWidth: "640px",
                 fieldHeight: "480px",
                 rows: 12,
-                columns: 16
+                columns: 12
             },
             hard: {
-                mines: 50,
+                mines: 30,
                 fieldWidth: "800px",
                 fieldHeight: "600px",
-                rows: 15,
-                columns: 20
+                rows: 16,
+                columns: 16
             }
         },
         this.timer = {
@@ -89,6 +89,23 @@ class Game {
                     UI.displayField(this.difficultyMenu[this.difficulty].fieldWidth, this.difficultyMenu[this.difficulty].fieldHeight, newSquareEl);
                 }
             }
+    }
+
+    // Apply dynamic styles to all squares inside field
+    applyDynamicStylesToField() {
+        const formContainer = document.querySelector("form");
+        const gameContainer = document.querySelector("#game");
+
+        gameContainer.style.width = formContainer.clientWidth + "px";
+        gameContainer.style.height = formContainer.clientWidth + "px";
+            
+        for(let i = 0; i < this.field.length; i++) {
+            for(let j = 0; j < this.field[i].length; j++) {
+                // Width and Height of squares scales with number of rows/columns 
+                this.field[i][j].style.width = `${gameContainer.clientWidth / this.difficultyMenu[this.difficulty].columns}px`;
+                this.field[i][j].style.height = `${gameContainer.clientHeight / this.difficultyMenu[this.difficulty].rows}px`;
+            }
+        }
     }
 
     getRandomFieldRowColumn() {
@@ -250,14 +267,15 @@ class Game {
             this.timer.clear();
         }
     }
+
 }
 
 // class UI
 class UI {
     static displayField(fieldWidth, fieldHeight, square) {
         const gameOutput = document.querySelector("#game");
-        gameOutput.style.width = fieldWidth;
-        gameOutput.style.height = fieldHeight;
+        // gameOutput.style.width = fieldWidth;
+        // gameOutput.style.height = fieldHeight;
         gameOutput.append(square);
     }
 
@@ -298,6 +316,7 @@ document.querySelector("#form-difficulty").addEventListener("submit", function(e
     const difficultyString = document.querySelector("#input-difficulty").value;
     newGame.difficulty = difficultyString;
     newGame.createField(newGame.difficulty);
+    newGame.applyDynamicStylesToField();
 
     // add events for created squares
     for(let i = 0; i < newGame.field.length; i++) {
@@ -323,3 +342,7 @@ document.querySelector("#form-difficulty").addEventListener("submit", function(e
         }
     }
 })
+
+window.addEventListener("resize", function(e) {
+    newGame.applyDynamicStylesToField();
+});
